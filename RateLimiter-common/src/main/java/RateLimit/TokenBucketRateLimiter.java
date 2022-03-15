@@ -9,11 +9,12 @@ public class TokenBucketRateLimiter implements RateLimiter{
     private final Bucket bucket=new Bucket();
 
     public TokenBucketRateLimiter(TokenBucketStrategy strategy){
-        bucket.tokens= strategy.getTokens();
-        bucket.interval= strategy.getInterval();
-        bucket.lastTick= strategy.getLastTick();
-        bucket.capacity=strategy.getCapacity();
-        bucket.quantum=strategy.getQuantum();
+        bucket.interval = strategy.getInterval();
+        bucket.capacity = strategy.getCapacity();
+        bucket.quantum = strategy.getQuantum();
+
+        bucket.lastTick = System.currentTimeMillis();
+        bucket.tokens = bucket.capacity;
     }
 
     @Override
@@ -24,7 +25,7 @@ public class TokenBucketRateLimiter implements RateLimiter{
 
             if (curToken>0||increment>0){
                 if(increment>0){
-                    bucket.tokens=Math.max(bucket.capacity, curToken+increment)-1;
+                    bucket.tokens=Math.min(bucket.capacity, curToken+increment)-1;
                     bucket.lastTick=System.currentTimeMillis();
                 }else{
                     bucket.tokens-=1;
