@@ -1,6 +1,7 @@
 package RateLimit;
 
-import RateLimitStrategy.RateLimitStrategy;
+import config.RateLimitConfig;
+import interfaces.RateLimiter;
 import log.RateLimitLogger;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +11,7 @@ import lombok.Setter;
 @SuppressWarnings("all")
 public class RateLimitStarter {
 
-    RateLimitStrategy rateLimitStrategy;
+    RateLimitConfig rateLimitConfig;
 
     RateLimiter rateLimiter;
 
@@ -20,19 +21,19 @@ public class RateLimitStarter {
      * the external method to do rate limit
      */
     public boolean doRateLimit() throws Exception {
-        long waitTime= rateLimitStrategy.getTimeout();
+        long waitTime= rateLimitConfig.getTimeout();
         long timeout=waitTime+System.currentTimeMillis();
-        boolean limitRetry= rateLimitStrategy.isLimitRetry();
-        long retryPeriod=rateLimitStrategy.getRetryPeriod();
+        boolean limitRetry= rateLimitConfig.isLimitRetry();
+        long retryPeriod= rateLimitConfig.getRetryPeriod();
         while (!rateLimiter.limit()){
             if(!limitRetry){
-                RateLimitLogger.error("retry policy is forbidden, request is rejected",rateLimitStrategy.isLogOn());
+                RateLimitLogger.error("retry policy is forbidden, request is rejected", rateLimitConfig.isLogOn());
                 return false;
             }
             Thread.sleep(retryPeriod);
             long curTime=System.currentTimeMillis();
             if(curTime>timeout){
-                RateLimitLogger.error("time out, request is rejected",rateLimitStrategy.isLogOn());
+                RateLimitLogger.error("time out, request is rejected", rateLimitConfig.isLogOn());
                 return false;
             }
         }

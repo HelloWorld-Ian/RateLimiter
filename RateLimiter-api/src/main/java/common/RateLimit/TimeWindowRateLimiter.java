@@ -1,11 +1,12 @@
-package RateLimit;
+package common.RateLimit;
 
-import RateLimitStrategy.TimeWindowStrategy;
+import interfaces.RateLimiter;
+import common.RateLimitStrategy.TimeWindowStrategy;
 
 /**
  * use time window rate limit strategy
  */
-public class TimeWindowRateLimiter implements RateLimiter{
+public class TimeWindowRateLimiter implements RateLimiter {
     private final TimeWindow timeWindow=new TimeWindow();
 
     public TimeWindowRateLimiter(TimeWindowStrategy strategy){

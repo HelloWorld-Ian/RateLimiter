@@ -1,12 +1,13 @@
 package RateLimit;
 
-import RateLimitStrategy.RateLimitStrategy;
+import config.RateLimitConfig;
+import interfaces.RateLimiter;
 
 public class RateLimitStarterBootstrap {
     private final RateLimitStarter starter=new RateLimitStarter();
 
-    public RateLimitStarterBootstrap setRateLimitStrategy(RateLimitStrategy strategy){
-        starter.setRateLimitStrategy(strategy);
+    public RateLimitStarterBootstrap setRateLimitStrategy(RateLimitConfig strategy){
+        starter.setRateLimitConfig(strategy);
         return this;
     }
 

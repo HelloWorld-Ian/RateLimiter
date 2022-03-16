@@ -8,8 +8,11 @@
     <artifactId>RateLimiter</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+
     <modules>
-        <module>RateLimiter-common</module>
+        <module>RateLimiter-core</module>
+        <module>RateLimiter-redis</module>
+        <module>RateLimiter-api</module>
     </modules>
 
     <properties>

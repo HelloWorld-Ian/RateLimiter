@@ -1,10 +1,12 @@
+package common;
 
-import RateLimit.RateLimitStarterBootstrap;
-import RateLimitStrategy.TokenBucketStrategy;
+
 import RateLimit.RateLimitStarter;
-import RateLimit.RateLimiter;
-import RateLimit.TokenBucketRateLimiter;
-import RateLimitStrategy.RateLimitStrategy;
+import RateLimit.RateLimitStarterBootstrap;
+import interfaces.RateLimiter;
+import config.RateLimitConfig;
+import common.RateLimit.TokenBucketRateLimiter;
+import common.RateLimitStrategy.TokenBucketStrategy;
 import log.RateLimitLogger;
 
 public class Test {
@@ -13,7 +15,7 @@ public class Test {
     public static Integer pass = 0;
     public static long start = System.currentTimeMillis();
     public static void main(String[] args) {
-        RateLimitStrategy strategy = new RateLimitStrategy();
+        RateLimitConfig strategy = new RateLimitConfig();
         strategy.setLimitRetry(false);
         strategy.setTimeout(2000);
         strategy.setRetryPeriod(500);

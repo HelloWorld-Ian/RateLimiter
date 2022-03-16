@@ -1,11 +1,12 @@
-package RateLimit;
+package common.RateLimit;
 
-import RateLimitStrategy.TokenBucketStrategy;
+import interfaces.RateLimiter;
+import common.RateLimitStrategy.TokenBucketStrategy;
 
 /**
  * use token bucket rate limit strategy
  */
-public class TokenBucketRateLimiter implements RateLimiter{
+public class TokenBucketRateLimiter implements RateLimiter {
     private final Bucket bucket=new Bucket();
 
     public TokenBucketRateLimiter(TokenBucketStrategy strategy){

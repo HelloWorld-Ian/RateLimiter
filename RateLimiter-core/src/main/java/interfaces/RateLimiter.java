@@ -1,4 +1,4 @@
-package RateLimit;
+package interfaces;
 
 public interface RateLimiter {
     /**

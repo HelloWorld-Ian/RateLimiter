@@ -1,4 +1,4 @@
-package RateLimitStrategy;
+package common.RateLimitStrategy;
 
 import lombok.Getter;
 import lombok.Setter;
