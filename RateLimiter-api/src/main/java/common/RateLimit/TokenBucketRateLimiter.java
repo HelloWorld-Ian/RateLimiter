@@ -20,22 +20,20 @@ public class TokenBucketRateLimiter implements RateLimiter {
 
     @Override
     public boolean limit(){
-        synchronized (bucket){
-            long increment=increment(bucket);
-            long curToken= bucket.tokens;
+        long increment=increment(bucket);
+        long curToken= bucket.tokens;
 
-            if (curToken>0||increment>0){
-                if(increment>0){
-                    bucket.tokens=Math.min(bucket.capacity, curToken+increment)-1;
-                    bucket.lastTick=System.currentTimeMillis();
-                }else{
-                    bucket.tokens-=1;
-                }
-                return true;
+        if (curToken>0||increment>0){
+            if(increment>0){
+                bucket.tokens=Math.min(bucket.capacity, curToken+increment)-1;
+                bucket.lastTick=System.currentTimeMillis();
+            }else{
+                bucket.tokens-=1;
             }
-
-            return false;
+            return true;
         }
+
+        return false;
     }
 
     /**
