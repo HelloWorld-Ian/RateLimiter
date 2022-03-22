@@ -5,5 +5,5 @@
 
 &emsp;&emsp;You can use this tool by referring to the single test, and you can use it with basic api or redis. If the target of rate limiting is a cluster, I suggest you use redis with this tool to do the rate limit. <br>
 
-&emsp;&emsp;If you have any proposal, please pull request or just leave you comment :)
+&emsp;&emsp;If you have any proposal, please pull request or just leave you comment : )
 
