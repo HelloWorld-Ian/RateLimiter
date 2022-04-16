@@ -16,11 +16,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @SuppressWarnings("all")
 public class RateLimitStarter {
 
-    Lock lock = new ReentrantLock();
-    Condition condition = lock.newCondition();
-
     RateLimitConfig rateLimitConfig;
-
     RateLimiter rateLimiter;
 
     protected RateLimitStarter(){}
@@ -29,31 +25,28 @@ public class RateLimitStarter {
      * the external method to do rate limit
      */
     public boolean doRateLimit() throws Exception {
-        long waitTime= rateLimitConfig.getTimeout();
-        long timeout=waitTime+System.currentTimeMillis();
-        boolean limitRetry= rateLimitConfig.isLimitRetry();
-        long retryPeriod= rateLimitConfig.getRetryPeriod();
-        lock.lock();
+        long waitTime = rateLimitConfig.getTimeout();
+        long timeout = waitTime+System.currentTimeMillis();
+        boolean limitRetry = rateLimitConfig.isLimitRetry();
+        long retryPeriod = rateLimitConfig.getRetryPeriod();
         boolean pass = false;
         while (!pass){
-            if (rateLimiter.limit()){
+            if (rateLimiter.limit()) {
                 pass = true;
-            }else if (!limitRetry){
+            } else if (!limitRetry) {
                 RateLimitLogger.error("retry policy is forbidden, request is rejected", rateLimitConfig.isLogOn());
                 break;
-            }else{
-                long curTime=System.currentTimeMillis();
-                if(curTime>timeout){
+            } else {
+                long curTime = System.currentTimeMillis();
+                if(curTime > timeout){
                     RateLimitLogger.error("time out, request is rejected", rateLimitConfig.isLogOn());
                     break;
                 }
-                condition.await(retryPeriod, TimeUnit.MILLISECONDS);
             }
         }
         if (pass){
             RateLimitLogger.info("pass success", rateLimitConfig.isLogOn());
         }
-        lock.unlock();
         return pass;
     }
 }

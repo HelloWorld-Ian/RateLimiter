@@ -3,11 +3,15 @@ package common.RateLimit;
 import interfaces.RateLimiter;
 import common.RateLimitStrategy.TimeWindowStrategy;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * use time window rate limit strategy
  */
 public class TimeWindowRateLimiter implements RateLimiter {
     private final TimeWindow timeWindow=new TimeWindow();
+    private final Lock lock = new ReentrantLock();
 
     public TimeWindowRateLimiter(TimeWindowStrategy strategy){
         timeWindow.active = 0;
@@ -18,6 +22,7 @@ public class TimeWindowRateLimiter implements RateLimiter {
 
     @Override
     public boolean limit() {
+        lock.lock();
         boolean pass=false;
         long cur=System.currentTimeMillis();
         if (cur - timeWindow.lastTick >= timeWindow.time){
@@ -30,6 +35,7 @@ public class TimeWindowRateLimiter implements RateLimiter {
                 pass=true;
             }
         }
+        lock.unlock();
         return pass;
     }
 

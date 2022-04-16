@@ -3,11 +3,15 @@ package common.RateLimit;
 import interfaces.RateLimiter;
 import common.RateLimitStrategy.TokenBucketStrategy;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * use token bucket rate limit strategy
  */
 public class TokenBucketRateLimiter implements RateLimiter {
     private final Bucket bucket=new Bucket();
+    private final Lock lock = new ReentrantLock();
 
     public TokenBucketRateLimiter(TokenBucketStrategy strategy){
         bucket.interval = strategy.getInterval();
@@ -20,20 +24,24 @@ public class TokenBucketRateLimiter implements RateLimiter {
 
     @Override
     public boolean limit(){
-        long increment=increment(bucket);
-        long curToken= bucket.tokens;
+        try {
+            lock.lock();
+            long increment=increment(bucket);
+            long curToken= bucket.tokens;
 
-        if (curToken>0||increment>0){
-            if(increment>0){
-                bucket.tokens=Math.min(bucket.capacity, curToken+increment)-1;
-                bucket.lastTick=System.currentTimeMillis();
-            }else{
-                bucket.tokens-=1;
+            if (curToken>0||increment>0){
+                if(increment>0){
+                    bucket.tokens=Math.min(bucket.capacity, curToken+increment)-1;
+                    bucket.lastTick=System.currentTimeMillis();
+                }else{
+                    bucket.tokens-=1;
+                }
+                return true;
             }
-            return true;
+            return false;
+        } finally {
+            lock.unlock();
         }
-
-        return false;
     }
 
     /**
